@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { CreditCard, Banknote, Landmark, MapPin, Check } from "lucide-react";
+import { CreditCard, Banknote, Landmark, MapPin, Check, ShoppingBag } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { TopBar } from "../components/layout/TopBar";
+import { useTextToSpeech } from "../hooks/useTextToSpeech";
+import { useHapticFeedback } from "../hooks/useHapticFeedback";
 
 export const PaymentScreen = () => {
   const { state, navigate, addOrder } = useApp();
+  const { speak } = useTextToSpeech(state.accessibility);
+  const { vibrate } = useHapticFeedback(state.accessibility);
   const [step, setStep] = useState(0);
   const [method, setMethod] = useState<"card" | "cash" | "transfer">("card");
   const [address, setAddress] = useState("");
@@ -12,11 +16,18 @@ export const PaymentScreen = () => {
 
   const cartItems = state.cartItems;
   const total = cartItems.reduce((sum, i) => sum + i.price * i.qty, 0);
-
   const steps = ["Método", "Dirección", "Resumen"];
+
+  const doAction = (msg: string, fn: () => void) => {
+    if (state.accessibility.ttsEnabled) speak(msg);
+    if (state.accessibility.hapticEnabled) vibrate("confirm");
+    fn();
+  };
 
   const handleConfirm = () => {
     setLoading(true);
+    const msg = `Procesando pago por ${total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} dólares`;
+    if (state.accessibility.ttsEnabled) speak(msg);
     setTimeout(() => {
       const order = {
         id: `E${Date.now().toString(36).toUpperCase()}`,
@@ -26,6 +37,7 @@ export const PaymentScreen = () => {
         status: "Procesando" as const,
       };
       addOrder(order);
+      if (state.accessibility.hapticEnabled) vibrate("success");
       navigate("confirmation");
     }, 1500);
   };
@@ -37,9 +49,9 @@ export const PaymentScreen = () => {
           <div className="space-y-3">
             <h2 className="font-bold text-lg text-foreground mb-3">Método de pago</h2>
             {([
-              { id: "card", icon: CreditCard, label: "Tarjeta de crédito/débito", desc: "Visa, Mastercard, American Express" },
-              { id: "cash", icon: Banknote, label: "Efectivo", desc: "Paga en efectivo al recibir" },
-              { id: "transfer", icon: Landmark, label: "Transferencia bancaria", desc: "Banco Estado, Santander, Chile" },
+              { id: "card", icon: CreditCard, label: "Tarjeta", desc: "Visa, Mastercard, American Express" },
+              { id: "cash", icon: Banknote, label: "Efectivo", desc: "Paga al recibir" },
+              { id: "transfer", icon: Landmark, label: "Transferencia", desc: "Banco Estado, Santander, Chile" },
             ] as const).map((opt) => (
               <button
                 key={opt.id}
@@ -71,7 +83,7 @@ export const PaymentScreen = () => {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Ingresa tu dirección"
-                className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
+                className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground py-2"
               />
             </div>
             <p className="text-xs text-muted-foreground">Ej: Av. Providencia 1234, Santiago</p>
@@ -81,17 +93,17 @@ export const PaymentScreen = () => {
         return (
           <div className="space-y-3">
             <h2 className="font-bold text-lg text-foreground mb-3">Resumen del pedido</h2>
-            <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+            <div className="bg-card rounded-2xl border border-border p-5 space-y-3 shadow-sm">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Productos ({cartItems.length})</span>
-                <span className="font-bold text-foreground">${total.toLocaleString("es-CL")}</span>
+                <span className="font-bold text-foreground">${total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Envío</span>
                 <span className="font-bold text-success">Gratis</span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Método de pago</span>
+                <span className="text-muted-foreground">Método</span>
                 <span className="font-bold text-foreground capitalize">{method === "card" ? "Tarjeta" : method === "cash" ? "Efectivo" : "Transferencia"}</span>
               </div>
               {address && (
@@ -101,8 +113,8 @@ export const PaymentScreen = () => {
                 </div>
               )}
               <div className="border-t border-border pt-3 flex items-center justify-between">
-                <span className="font-bold text-lg text-foreground">Total</span>
-                <span className="font-bold text-xl text-primary">${total.toLocaleString("es-CL")}</span>
+                <span className="font-bold text-lg text-foreground">Total a pagar</span>
+                <span className="font-bold text-2xl text-primary">${total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
             </div>
           </div>
@@ -141,9 +153,9 @@ export const PaymentScreen = () => {
             </button>
           )}
           <button
-            onClick={() => step < 2 ? setStep(step + 1) : handleConfirm()}
+            onClick={() => step < 2 ? doAction(`Paso siguiente: ${steps[step + 1]}`, () => setStep(step + 1)) : handleConfirm()}
             disabled={loading || (step === 1 && !address.trim())}
-            className="flex-1 py-4 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary-hover transition-all active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg hover:bg-primary-hover transition-all active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Procesando..." : step < 2 ? "Siguiente" : "Confirmar compra"}
           </button>

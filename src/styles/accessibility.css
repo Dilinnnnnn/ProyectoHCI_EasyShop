@@ -24,28 +24,94 @@
 .textsize-large .text-xs { font-size: 13px !important; }
 .textsize-xlarge .text-xs { font-size: 15px !important; }
 
+/* Prevent text overflow on large/xlarge text */
+.textsize-large, .textsize-xlarge {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.textsize-large .whitespace-nowrap,
+.textsize-xlarge .whitespace-nowrap {
+  white-space: normal !important;
+}
+
 /* ─── Button Size ───────────────────────────────────────────────────────────── */
 
 .btnsize-normal button, .btnsize-normal .btn-accessible {
-  min-height: 48px;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  min-height: 60px;
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
 
 .btnsize-large button, .btnsize-large .btn-accessible {
-  min-height: 64px;
-  padding-top: 18px;
-  padding-bottom: 18px;
-  font-size: 1.15rem !important;
+  min-height: 72px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-size: 1.2rem !important;
 }
 
-.btnsize-large .py-3 { padding-top: 14px !important; padding-bottom: 14px !important; }
-.btnsize-large .py-4 { padding-top: 18px !important; padding-bottom: 18px !important; }
-.btnsize-large .py-5 { padding-top: 22px !important; padding-bottom: 22px !important; }
+.btnsize-large .py-3 { padding-top: 16px !important; padding-bottom: 16px !important; }
+.btnsize-large .py-4 { padding-top: 20px !important; padding-bottom: 20px !important; }
+.btnsize-large .py-5 { padding-top: 24px !important; padding-bottom: 24px !important; }
 
 /* ─── One Hand Mode ─────────────────────────────────────────────────────────── */
 
-.one-hand-mode .screen-scroll { padding-bottom: 20px; }
+.one-hand-mode .bottom-nav {
+  order: -1;
+  border-top: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.one-hand-mode .screen-scroll {
+  padding-bottom: 0;
+}
+
+.one-hand-mode .top-bar {
+  order: -2;
+}
+
+.one-hand-mode .flex-col {
+  flex-direction: column;
+}
+
+/* Bigger touch targets in one-hand mode */
+.one-hand-mode button,
+.one-hand-mode .btn-accessible {
+  min-height: 64px;
+}
+
+/* ─── Accessibility Indicator ────────────────────────────────────────────────── */
+
+.accessibility-indicator {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.accessibility-indicator .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.accessibility-indicator .chip.voice {
+  background: var(--voice);
+  color: var(--voice-foreground);
+}
+
+.accessibility-indicator .chip.success {
+  background: var(--success);
+  color: var(--success-foreground);
+}
 
 /* ─── Scroll fix ────────────────────────────────────────────────────────────── */
 

@@ -3,6 +3,7 @@ import { AppProvider, useApp } from "./context/AppContext";
 import { FloatingMicButton } from "./components/accessibility/FloatingMicButton";
 import { VoiceAssistantOverlay } from "./components/accessibility/VoiceAssistantOverlay";
 import { TutorialOverlay } from "./components/accessibility/TutorialOverlay";
+import { AccessibilityIndicator } from "./components/accessibility/AccessibilityIndicator";
 
 import { SplashScreen } from "./screens/SplashScreen";
 import { HomeScreen } from "./screens/HomeScreen";
@@ -16,7 +17,7 @@ import { ProfileScreen } from "./screens/ProfileScreen";
 import { HistoryScreen } from "./screens/HistoryScreen";
 import { AccessibilityScreen } from "./screens/AccessibilityScreen";
 
-function ScreenRouter() {
+function AppContent() {
   const { state } = useApp();
   const [voiceActive, setVoiceActive] = useState(false);
   const [voiceAssistantOpen, setVoiceAssistantOpen] = useState(false);
@@ -53,56 +54,52 @@ function ScreenRouter() {
 
   const switchScreen = () => {
     switch (state.screen) {
-      case "splash":
-        return <SplashScreen />;
-      case "home":
-        return <HomeScreen voiceActive={voiceActive} onVoice={handleVoice} />;
-      case "categories":
-        return <CategoriesScreen voiceActive={voiceActive} onVoice={handleVoice} />;
-      case "product-list":
-        return <ProductListScreen voiceActive={voiceActive} onVoice={handleVoice} />;
-      case "product-detail":
-        return <ProductDetailScreen />;
-      case "cart":
-        return <CartScreen />;
-      case "payment":
-        return <PaymentScreen />;
-      case "confirmation":
-        return <ConfirmationScreen />;
-      case "profile":
-        return <ProfileScreen />;
-      case "history":
-        return <HistoryScreen />;
-      case "accessibility":
-        return <AccessibilityScreen />;
-      default:
-        return <HomeScreen voiceActive={voiceActive} onVoice={handleVoice} />;
+      case "splash": return <SplashScreen />;
+      case "home": return <HomeScreen voiceActive={voiceActive} onVoice={handleVoice} />;
+      case "categories": return <CategoriesScreen voiceActive={voiceActive} onVoice={handleVoice} />;
+      case "product-list": return <ProductListScreen voiceActive={voiceActive} onVoice={handleVoice} />;
+      case "product-detail": return <ProductDetailScreen />;
+      case "cart": return <CartScreen />;
+      case "payment": return <PaymentScreen />;
+      case "confirmation": return <ConfirmationScreen />;
+      case "profile": return <ProfileScreen />;
+      case "history": return <HistoryScreen />;
+      case "accessibility": return <AccessibilityScreen />;
+      default: return <HomeScreen voiceActive={voiceActive} onVoice={handleVoice} />;
     }
   };
 
   const a11y = state.accessibility;
+  const showIndicator = state.screen !== "splash" && (
+    a11y.voiceCommands || a11y.ttsEnabled || a11y.oneHandMode ||
+    a11y.buttonSize === "large" || a11y.highContrast || a11y.darkMode
+  );
 
   return (
-    <div
-      className={`flex flex-col flex-1 min-h-0 textsize-${a11y.textSize} btnsize-${a11y.buttonSize}
-        ${a11y.darkMode ? "dark" : ""}
-        ${a11y.highContrast ? "high-contrast" : ""}
-        ${a11y.oneHandMode ? "one-hand-mode" : ""}`}
-    >
-      {switchScreen()}
+    <>
+      <div
+        className={`flex flex-col flex-1 min-h-0 textsize-${a11y.textSize} btnsize-${a11y.buttonSize}
+          ${a11y.darkMode ? "dark" : ""}
+          ${a11y.highContrast ? "high-contrast" : ""}
+          ${a11y.oneHandMode ? "one-hand-mode" : ""}`}
+      >
+        {showIndicator && <AccessibilityIndicator />}
+
+        {switchScreen()}
+
+        {voiceAssistantOpen && (
+          <VoiceAssistantOverlay onClose={stopVoice} />
+        )}
+
+        {showTutorial && (
+          <TutorialOverlay onClose={() => setShowTutorial(false)} />
+        )}
+      </div>
 
       {a11y.voiceCommands && state.screen !== "splash" && (
         <FloatingMicButton onClick={handleVoice} active={voiceActive} />
       )}
-
-      {voiceAssistantOpen && (
-        <VoiceAssistantOverlay onClose={stopVoice} />
-      )}
-
-      {showTutorial && (
-        <TutorialOverlay onClose={() => setShowTutorial(false)} />
-      )}
-    </div>
+    </>
   );
 }
 
@@ -115,7 +112,7 @@ export default function App() {
           md:my-4 md:h-[calc(100vh-2rem)] md:rounded-2xl md:shadow-2xl md:border md:border-border"
         style={{ fontFamily: "'Nunito', 'Nunito Sans', system-ui, sans-serif" }}
       >
-        <ScreenRouter />
+        <AppContent />
       </div>
     </AppProvider>
   );

@@ -129,9 +129,9 @@ function appReducer(state: AppState, action: Action): AppState {
         previousScreen: null,
       };
     case "SELECT_PRODUCT":
-      return { ...state, selectedProductId: action.productId, screen: "product-detail" };
+      return { ...state, previousScreen: state.screen, selectedProductId: action.productId, screen: "product-detail" };
     case "SELECT_CATEGORY":
-      return { ...state, selectedCategoryId: action.categoryId, screen: "product-list" };
+      return { ...state, previousScreen: state.screen, selectedCategoryId: action.categoryId, screen: "product-list" };
     case "SET_SEARCH":
       return { ...state, searchQuery: action.query };
     case "ADD_TO_CART": {

@@ -64,7 +64,7 @@ export const HistoryScreen = () => {
                             })()}
                           </div>
                           <span className="flex-1 text-muted-foreground truncate">{item.name} x{item.qty}</span>
-                          <span className="font-bold text-foreground">${(item.price * item.qty).toLocaleString("es-CL")}</span>
+                          <span className="font-bold text-foreground">${(item.price * item.qty).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
                       ))}
                       {order.items.length > 3 && (
@@ -73,7 +73,7 @@ export const HistoryScreen = () => {
                     </div>
                     <div className="flex items-center justify-between pt-2 border-t border-border">
                       <span className="font-bold text-foreground">Total</span>
-                      <span className="font-bold text-lg text-primary">${order.total.toLocaleString("es-CL")}</span>
+                      <span className="font-bold text-lg text-primary">${order.total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
                   </div>
                   <button

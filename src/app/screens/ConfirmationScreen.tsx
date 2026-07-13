@@ -21,7 +21,7 @@ export const ConfirmationScreen = () => {
     setConfetti(c);
     setTimeout(() => setShowContent(true), 300);
     if (lastOrder) {
-      speak(`Compra confirmada. Número de pedido: ${lastOrder.id}. Total: ${lastOrder.total.toLocaleString("es-CL")} pesos.`);
+      speak(`Compra confirmada. Número de pedido: ${lastOrder.id}. Total: ${lastOrder.total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} dólares.`);
     }
   }, []);
 
@@ -61,7 +61,7 @@ export const ConfirmationScreen = () => {
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Total</span>
-                <span className="font-bold text-lg text-primary">${lastOrder.total.toLocaleString("es-CL")}</span>
+                <span className="font-bold text-lg text-primary">${lastOrder.total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <Truck className="w-4 h-4 text-muted-foreground" />
