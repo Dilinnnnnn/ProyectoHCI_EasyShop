@@ -92,7 +92,7 @@ function AppContent() {
           <VoiceAssistantOverlay onClose={stopVoice} />
         )}
 
-        <BackgroundVoiceListener />
+        <BackgroundVoiceListener disabled={voiceAssistantOpen} />
 
         {showTutorial && (
           <TutorialOverlay onClose={() => setShowTutorial(false)} />

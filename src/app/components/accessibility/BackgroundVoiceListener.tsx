@@ -4,7 +4,11 @@ import { useApp } from "../../context/AppContext";
 import { useVoiceCommands } from "../../hooks/useVoiceCommands";
 import { useTextToSpeech } from "../../hooks/useTextToSpeech";
 
-export function BackgroundVoiceListener() {
+interface Props {
+  disabled: boolean;
+}
+
+export function BackgroundVoiceListener({ disabled }: Props) {
   const app = useApp();
   const { processCommand } = useVoiceCommands(app);
   const { speak } = useTextToSpeech(app.state.accessibility);
@@ -13,7 +17,7 @@ export function BackgroundVoiceListener() {
   processRef.current = processCommand;
   speakRef.current = speak;
 
-  const bgActive = app.state.accessibility.voiceCommands && app.state.screen !== "splash";
+  const bgActive = app.state.accessibility.voiceCommands && app.state.screen !== "splash" && !disabled;
 
   useEffect(() => {
     if (!bgActive) return;
