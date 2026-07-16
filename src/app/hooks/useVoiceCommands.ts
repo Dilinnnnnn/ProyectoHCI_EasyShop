@@ -85,6 +85,15 @@ export function useVoiceCommands(actions: AppActions) {
             return `Agregado: ${p.name}`;
           }
         }
+        // If on product detail, add the product being viewed
+        const productId = actions.state.selectedProductId;
+        if (actions.state.screen === "product-detail" && productId !== null) {
+          const p = products.find((x) => x.id === productId);
+          if (p) {
+            actions.addToCart(p);
+            return `Agregado: ${p.name}`;
+          }
+        }
         // If no product name matched, add first visible product
         const currentCategory = actions.state.selectedCategoryId;
         const available = currentCategory
