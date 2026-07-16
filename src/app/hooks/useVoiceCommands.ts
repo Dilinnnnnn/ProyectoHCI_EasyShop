@@ -30,7 +30,7 @@ export function useVoiceCommands(actions: AppActions) {
 
       // ─── Search ("buscar zapatillas", "buscar tecnología") ──────────────
       if (cmd.startsWith("buscar ") || cmd.startsWith("encontrar ") || cmd.startsWith("quisar ")) {
-        const queryRaw = transcript.replace(/^(buscar|encontrar|quisar)\s+/i, "");
+        const queryRaw = transcript.replace(/^(buscar|encontrar|quisar)\s+/i, "").replace(/[^a-záéíóúüñ0-9\s]+$/i, "").trim();
         const queryNorm = normalize(queryRaw);
         // If query matches a category, navigate to that category
         for (const cat of categories) {
