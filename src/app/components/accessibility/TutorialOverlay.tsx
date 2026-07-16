@@ -14,7 +14,7 @@ const steps = [
   {
     icon: Mic,
     title: "Compra con tu voz",
-    description: "Toca el botón turquesa \"Buscar por voz\" o simplemente di \"Compra\" seguido de lo que quieras. Ejemplos: \"Compra buscar zapatillas\", \"Compra agregar al carrito\", \"Compra entrar audífonos\". No necesitas escribir ni tocar nada.",
+    description: "Toca el botón turquesa \"Buscar por voz\" en cualquier pantalla y di lo que necesitas. Por ejemplo: \"Buscar zapatillas\", \"Agregar al carrito\" o \"Comprar ahora\". No necesitas escribir nada.",
     bgClass: "bg-voice/10",
     textClass: "text-voice",
   },
