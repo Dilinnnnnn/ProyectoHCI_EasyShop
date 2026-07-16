@@ -15,8 +15,8 @@ export function useSpeechRecognition() {
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
   const restartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const statusRef = useRef(status);
-  useEffect(() => { statusRef.current = status; }, [status]);
+  const keepAliveRef = useRef(true);
+
 
   useEffect(() => {
     const SR =
@@ -48,6 +48,7 @@ export function useSpeechRecognition() {
     }
 
     try {
+      keepAliveRef.current = true;
       const recognition = new SR();
       recognition.lang = "es-ES";
       recognition.continuous = true;
@@ -92,12 +93,10 @@ export function useSpeechRecognition() {
       };
 
       recognition.onend = () => {
-        if (statusRef.current === "listening") {
+        if (keepAliveRef.current) {
           restartTimeoutRef.current = setTimeout(() => {
             try { recognition.start(); } catch {}
-          }, 300);
-        } else {
-          setStatus("idle");
+          }, 100);
         }
       };
 
@@ -115,6 +114,7 @@ export function useSpeechRecognition() {
       restartTimeoutRef.current = null;
     }
     if (recognitionRef.current) {
+      keepAliveRef.current = false;
       try { recognitionRef.current.stop(); } catch {}
       try { recognitionRef.current.abort(); } catch {}
       recognitionRef.current = null;

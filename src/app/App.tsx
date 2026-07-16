@@ -49,7 +49,8 @@ function AppContent() {
     setVoiceAssistantOpen(false);
     setVoiceActive(false);
     if (voiceTimer.current) clearTimeout(voiceTimer.current);
-  }, []);
+    resetTranscript();
+  }, [resetTranscript]);
 
   // ─── Wake word "hola" detection ────────────────────────────
   useEffect(() => {
