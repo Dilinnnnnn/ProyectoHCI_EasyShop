@@ -52,6 +52,15 @@ export const VoiceAssistantOverlay = ({ onClose, transcript, interimTranscript, 
     return () => clearTimeout(timer);
   }, []);
 
+  const statusMessage = () => {
+    switch (status) {
+      case "listening": return "Escuchando...";
+      case "processing": return "Procesando...";
+      case "error": return "Error";
+      default: return "Preparando...";
+    }
+  };
+
   const displayText = waiting ? "Escuchando..." : (interimTranscript || transcript || "Escuchando...");
 
   return (
