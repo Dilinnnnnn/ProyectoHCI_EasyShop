@@ -59,8 +59,6 @@ function AppContent() {
     const text = transcript.toLowerCase().trim();
 
     if (text.startsWith("hola ") || text === "hola") {
-      resetTranscript();
-      wakeRef.current = true;
       setVoiceAssistantOpen(true);
       setVoiceActive(true);
       if (voiceTimer.current) clearTimeout(voiceTimer.current);

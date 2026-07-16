@@ -15,6 +15,8 @@ export function useSpeechRecognition() {
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
   const restartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const statusRef = useRef(status);
+  useEffect(() => { statusRef.current = status; }, [status]);
 
   useEffect(() => {
     const SR =
@@ -90,7 +92,7 @@ export function useSpeechRecognition() {
       };
 
       recognition.onend = () => {
-        if (status === "listening") {
+        if (statusRef.current === "listening") {
           restartTimeoutRef.current = setTimeout(() => {
             try { recognition.start(); } catch {}
           }, 300);

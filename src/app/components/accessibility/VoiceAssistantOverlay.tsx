@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import { Mic, X, MicOff } from "lucide-react";
 import { useApp } from "../../context/AppContext";
 import { useVoiceCommands } from "../../hooks/useVoiceCommands";
@@ -18,15 +18,30 @@ export const VoiceAssistantOverlay = ({ onClose, transcript, interimTranscript, 
   const { processCommand } = useVoiceCommands(app);
   const { speak } = useTextToSpeech(app.state.accessibility);
   const [waiting, setWaiting] = useState(true);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const processRef = useCallback((text: string) => {
-    const response = processCommand(text);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    const trimmed = text.trim();
+    const lower = trimmed.toLowerCase();
+    let clean = trimmed;
+    if (lower.startsWith("hola ")) {
+      clean = trimmed.slice(5);
+    } else if (lower === "hola") {
+      clean = "";
+    }
+    clean = clean.trim();
+    if (!clean) {
+      setWaiting(true);
+      return;
+    }
+    const response = processCommand(clean);
     if (response) {
       speak(response);
-      setTimeout(() => { setWaiting(false); onClose(); }, 2000);
+      closeTimerRef.current = setTimeout(() => { setWaiting(false); onClose(); }, 2000);
     } else {
       speak("No entendí el comando. Intenta de nuevo.");
-      setTimeout(() => { setWaiting(false); onClose(); }, 2000);
+      closeTimerRef.current = setTimeout(() => { setWaiting(false); onClose(); }, 2000);
     }
   }, [processCommand, speak, onClose]);
 
@@ -40,7 +55,7 @@ export const VoiceAssistantOverlay = ({ onClose, transcript, interimTranscript, 
   useEffect(() => {
     if (status === "error") {
       speak("Error de reconocimiento. Intenta de nuevo.");
-      setTimeout(() => onClose(), 2000);
+      closeTimerRef.current = setTimeout(() => onClose(), 2000);
     }
   }, [status]);
 
@@ -49,7 +64,7 @@ export const VoiceAssistantOverlay = ({ onClose, transcript, interimTranscript, 
       speak("No se detectó voz. Cerrando asistente.");
       onClose();
     }, 12000);
-    return () => clearTimeout(timer);
+    return () => { clearTimeout(timer); if (closeTimerRef.current) clearTimeout(closeTimerRef.current); };
   }, []);
 
   const statusMessage = () => {
