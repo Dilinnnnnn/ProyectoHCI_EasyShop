@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { Mic, X, MicOff } from "lucide-react";
 import { useApp } from "../../context/AppContext";
 import { useVoiceCommands } from "../../hooks/useVoiceCommands";
@@ -17,34 +17,28 @@ export const VoiceAssistantOverlay = ({ onClose, transcript, interimTranscript, 
   const app = useApp();
   const { processCommand } = useVoiceCommands(app);
   const { speak } = useTextToSpeech(app.state.accessibility);
+  const [waiting, setWaiting] = useState(true);
 
   const processRef = useCallback((text: string) => {
     const response = processCommand(text);
+    setWaiting(true);
     if (response) {
       speak(response);
-      setTimeout(onClose, 2000);
+      setTimeout(() => { setWaiting(false); onClose(); }, 2000);
     } else {
       speak("No entendí el comando. Intenta de nuevo.");
-      setTimeout(onClose, 2000);
+      setTimeout(() => { setWaiting(false); onClose(); }, 2000);
     }
   }, [processCommand, speak, onClose]);
 
   useEffect(() => {
     if (transcript && status === "processing") {
+      setWaiting(false);
       processRef(transcript);
     }
   }, [transcript, status]);
 
-  const statusMessage = () => {
-    switch (status) {
-      case "listening": return "Escuchando...";
-      case "processing": return "Procesando...";
-      case "error": return "Error";
-      default: return "Preparando...";
-    }
-  };
-
-  const displayText = interimTranscript || transcript || statusMessage();
+  const displayText = waiting ? "Escuchando..." : (interimTranscript || transcript || "Escuchando...");
 
   return (
     <div className="absolute inset-0 z-50 bg-overlay/70 flex items-center justify-center animate-fade-in">

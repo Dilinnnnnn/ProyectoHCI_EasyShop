@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { AppProvider, useApp } from "./context/AppContext";
 import { useSpeechRecognition } from "./hooks/useSpeechRecognition";
-import { useVoiceCommands } from "./hooks/useVoiceCommands";
-import { useTextToSpeech } from "./hooks/useTextToSpeech";
 import { FloatingMicButton } from "./components/accessibility/FloatingMicButton";
 import { VoiceAssistantOverlay } from "./components/accessibility/VoiceAssistantOverlay";
 import { TutorialOverlay } from "./components/accessibility/TutorialOverlay";
@@ -22,8 +20,6 @@ import { AccessibilityScreen } from "./screens/AccessibilityScreen";
 
 function AppContent() {
   const app = useApp();
-  const { processCommand } = useVoiceCommands(app);
-  const { speak } = useTextToSpeech(app.state.accessibility);
 
   // ─── Single shared speech recognition instance ─────────────
   const {
@@ -35,7 +31,6 @@ function AppContent() {
   const [voiceAssistantOpen, setVoiceAssistantOpen] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const voiceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const wakeRef = useRef(false);
 
   // ─── Start continuous listening after first mic press ──────
   const handleVoice = useCallback(() => {
@@ -59,28 +54,17 @@ function AppContent() {
   // ─── Wake word "hola" detection ────────────────────────────
   useEffect(() => {
     if (!transcript || status !== "processing") return;
-    if (voiceAssistantOpen) return; // already open, VAD handles it
+    if (voiceAssistantOpen) return;
 
     const text = transcript.toLowerCase().trim();
 
     if (text.startsWith("hola ") || text === "hola") {
-      const cmd = text.replace(/^hola\s*/i, "").trim();
       resetTranscript();
       wakeRef.current = true;
       setVoiceAssistantOpen(true);
       setVoiceActive(true);
       if (voiceTimer.current) clearTimeout(voiceTimer.current);
       voiceTimer.current = setTimeout(() => setVoiceActive(false), 10000);
-
-      if (cmd) {
-        setTimeout(() => {
-          const response = processCommand(cmd);
-          if (response) speak(response);
-          setTimeout(stopVoice, 2000);
-        }, 300);
-      } else {
-        speak("Dime qué necesitas");
-      }
     }
   }, [transcript, status, voiceAssistantOpen]);
 
