@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { CreditCard, Banknote, Landmark, MapPin, Check, ShoppingBag } from "lucide-react";
+import { CreditCard, Banknote, Landmark, MapPin, Check } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { TopBar } from "../components/layout/TopBar";
 import { useTextToSpeech } from "../hooks/useTextToSpeech";
 import { useHapticFeedback } from "../hooks/useHapticFeedback";
 
 export const PaymentScreen = () => {
-  const { state, navigate, addOrder } = useApp();
+  const { state, navigate, addOrder, setPaymentMethod, setPaymentStep } = useApp();
   const { speak } = useTextToSpeech(state.accessibility);
   const { vibrate } = useHapticFeedback(state.accessibility);
-  const [step, setStep] = useState(0);
-  const [method, setMethod] = useState<"card" | "cash" | "transfer">("card");
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const step = state.paymentStep;
+  const method = state.paymentMethod;
 
   const cartItems = state.cartItems;
   const total = cartItems.reduce((sum, i) => sum + i.price * i.qty, 0);
@@ -37,6 +38,8 @@ export const PaymentScreen = () => {
         status: "Procesando" as const,
       };
       addOrder(order);
+      setPaymentStep(0);
+      setPaymentMethod("card");
       if (state.accessibility.hapticEnabled) vibrate("success");
       navigate("confirmation");
     }, 1500);
@@ -49,13 +52,13 @@ export const PaymentScreen = () => {
           <div className="space-y-3">
             <h2 className="font-bold text-lg text-foreground mb-3">Método de pago</h2>
             {([
-              { id: "card", icon: CreditCard, label: "Tarjeta", desc: "Visa, Mastercard, American Express" },
-              { id: "cash", icon: Banknote, label: "Efectivo", desc: "Paga al recibir" },
-              { id: "transfer", icon: Landmark, label: "Transferencia", desc: "Banco Estado, Santander, Chile" },
-            ] as const).map((opt) => (
+              { id: "card" as const, icon: CreditCard, label: "Tarjeta", desc: "Visa, Mastercard, American Express" },
+              { id: "cash" as const, icon: Banknote, label: "Efectivo", desc: "Paga al recibir" },
+              { id: "transfer" as const, icon: Landmark, label: "Transferencia", desc: "Banco Estado, Santander, Chile" },
+            ]).map((opt) => (
               <button
                 key={opt.id}
-                onClick={() => setMethod(opt.id)}
+                onClick={() => setPaymentMethod(opt.id)}
                 className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${
                   method === opt.id ? "border-primary bg-primary/5" : "border-border bg-card hover:border-muted-foreground/30"
                 }`}
@@ -146,14 +149,14 @@ export const PaymentScreen = () => {
         <div className="flex gap-2 pt-2">
           {step > 0 && (
             <button
-              onClick={() => setStep(step - 1)}
+              onClick={() => setPaymentStep(step - 1)}
               className="flex-1 py-4 rounded-xl bg-card border-2 border-border text-foreground font-bold hover:bg-muted transition-all active:scale-[0.97]"
             >
               Atrás
             </button>
           )}
           <button
-            onClick={() => step < 2 ? doAction(`Paso siguiente: ${steps[step + 1]}`, () => setStep(step + 1)) : handleConfirm()}
+            onClick={() => step < 2 ? doAction(`Paso siguiente: ${steps[step + 1]}`, () => setPaymentStep(step + 1)) : handleConfirm()}
             disabled={loading || (step === 1 && !address.trim())}
             className="flex-1 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg hover:bg-primary-hover transition-all active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
           >

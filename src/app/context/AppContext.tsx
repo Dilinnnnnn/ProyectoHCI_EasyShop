@@ -64,6 +64,8 @@ export interface AppState {
   orderHistory: Order[];
   recentSearches: string[];
   accessibility: AccessibilitySettings;
+  paymentMethod: "card" | "cash" | "transfer";
+  paymentStep: number;
 }
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
@@ -81,7 +83,9 @@ type Action =
   | { type: "ADD_ORDER"; order: Order }
   | { type: "ADD_RECENT_SEARCH"; query: string }
   | { type: "SET_ACCESSIBILITY"; settings: Partial<AccessibilitySettings> }
-  | { type: "SET_CART"; items: CartItem[] };
+  | { type: "SET_CART"; items: CartItem[] }
+  | { type: "SET_PAYMENT_METHOD"; method: "card" | "cash" | "transfer" }
+  | { type: "SET_PAYMENT_STEP"; step: number };
 
 // ─── Initial State ────────────────────────────────────────────────────────────
 
@@ -110,6 +114,8 @@ const defaultState: AppState = {
   orderHistory: [],
   recentSearches: [],
   accessibility: defaultAccessibility,
+  paymentMethod: "card",
+  paymentStep: 0,
 };
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
@@ -184,6 +190,7 @@ function appReducer(state: AppState, action: Action): AppState {
     case "ADD_ORDER":
       return {
         ...state,
+        cartItems: [],
         orderHistory: [action.order, ...state.orderHistory],
       };
     case "ADD_RECENT_SEARCH": {
@@ -197,6 +204,10 @@ function appReducer(state: AppState, action: Action): AppState {
       };
     case "SET_CART":
       return { ...state, cartItems: action.items };
+    case "SET_PAYMENT_METHOD":
+      return { ...state, paymentMethod: action.method };
+    case "SET_PAYMENT_STEP":
+      return { ...state, paymentStep: action.step };
     default:
       return state;
   }
@@ -219,6 +230,8 @@ export interface AppContextValue {
   addRecentSearch: (query: string) => void;
   setAccessibility: (settings: Partial<AccessibilitySettings>) => void;
   setCart: (items: CartItem[]) => void;
+  setPaymentMethod: (method: "card" | "cash" | "transfer") => void;
+  setPaymentStep: (step: number) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -287,6 +300,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const addRecentSearch = useCallback((query: string) => dispatch({ type: "ADD_RECENT_SEARCH", query }), []);
   const setAccessibility = useCallback((settings: Partial<AccessibilitySettings>) => dispatch({ type: "SET_ACCESSIBILITY", settings }), []);
   const setCart = useCallback((items: CartItem[]) => dispatch({ type: "SET_CART", items }), []);
+  const setPaymentMethod = useCallback((method: "card" | "cash" | "transfer") => dispatch({ type: "SET_PAYMENT_METHOD", method }), []);
+  const setPaymentStep = useCallback((step: number) => dispatch({ type: "SET_PAYMENT_STEP", step }), []);
 
   return (
     <AppContext.Provider
@@ -305,6 +320,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         addRecentSearch,
         setAccessibility,
         setCart,
+        setPaymentMethod,
+        setPaymentStep,
       }}
     >
       {children}

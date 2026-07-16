@@ -28,6 +28,7 @@ export const VoiceAssistantOverlay = ({ onClose }: VoiceAssistantOverlayProps) =
       const response = processCommand(transcript);
       if (response) {
         speak(response);
+        resetTranscript();
         setTimeout(onClose, 2000);
       } else {
         speak("No entendí el comando. Intenta de nuevo.");

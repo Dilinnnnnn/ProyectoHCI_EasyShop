@@ -95,7 +95,7 @@ export const products: Product[] = [
     name: "Sandalias Confort",
     price: 24.99,
     category: "calzado",
-    image: "https://images.unsplash.com/photo-1603487742131-4160ec2f2960?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1562183241-b937e95585b6?w=400&h=400&fit=crop",
     rating: 4.0,
     reviews: 45,
     description:
@@ -119,7 +119,7 @@ export const products: Product[] = [
     name: "Lámpara LED Escritorio",
     price: 29.99,
     category: "hogar",
-    image: "https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1564338639927-06d24175bd3d?w=400&h=400&fit=crop",
     rating: 4.3,
     reviews: 92,
     description:
@@ -131,7 +131,7 @@ export const products: Product[] = [
     name: "Crema Hidratante Corporal",
     price: 14.99,
     category: "belleza",
-    image: "https://images.unsplash.com/photo-1570194065650-d99fb4ee88f6?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1744309694353-aa1ce9d6c61f?w=400&h=400&fit=crop",
     rating: 4.5,
     reviews: 134,
     description:
@@ -143,7 +143,7 @@ export const products: Product[] = [
     name: "Set de Bloques Constructor",
     price: 19.99,
     category: "juguetes",
-    image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1765403256661-c60b291c38ba?w=400&h=400&fit=crop",
     rating: 4.9,
     reviews: 312,
     description:
@@ -167,7 +167,7 @@ export const products: Product[] = [
     name: "Balón de Fútbol Profesional",
     price: 34.99,
     category: "deporte",
-    image: "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1766934824988-1fb59c99c320?w=400&h=400&fit=crop",
     rating: 4.4,
     reviews: 87,
     description:
@@ -215,7 +215,7 @@ export const products: Product[] = [
     name: "Botines de Fútbol Taco",
     price: 69.99,
     category: "calzado",
-    image: "https://images.unsplash.com/photo-1511882150382-421056c89033?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1571267434388-6a1df2649dce?w=400&h=400&fit=crop",
     rating: 4.3,
     reviews: 74,
     description:
@@ -227,7 +227,7 @@ export const products: Product[] = [
     name: "Zapatos Formales Derby",
     price: 84.99,
     category: "calzado",
-    image: "https://images.unsplash.com/photo-1614252369475-531eba835eb1?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1563434649554-58f91d22ec2c?w=400&h=400&fit=crop",
     rating: 4.6,
     reviews: 53,
     description:
@@ -275,7 +275,7 @@ export const products: Product[] = [
     name: "Cámara Web HD 1080p",
     price: 29.99,
     category: "tecnologia",
-    image: "https://images.unsplash.com/photo-1587826080692-f439cd0b70da?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1650017067794-80fd3a99a104?w=400&h=400&fit=crop",
     rating: 4.2,
     reviews: 87,
     description:
@@ -287,7 +287,7 @@ export const products: Product[] = [
     name: "Cargador Portátil 20000mAh",
     price: 25.99,
     category: "tecnologia",
-    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1566554738544-d962991c3fee?w=400&h=400&fit=crop",
     rating: 4.5,
     reviews: 312,
     description:
@@ -323,7 +323,7 @@ export const products: Product[] = [
     name: "Sweater Lana Fina",
     price: 28.99,
     category: "ropa",
-    image: "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1706822869047-f8465d8611c1?w=400&h=400&fit=crop",
     rating: 4.4,
     reviews: 63,
     description:
@@ -371,7 +371,7 @@ export const products: Product[] = [
     name: "Organizador de Escritorio",
     price: 15.99,
     category: "hogar",
-    image: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1751107756601-66fa542b0e3c?w=400&h=400&fit=crop",
     rating: 4.2,
     reviews: 54,
     description:
@@ -383,7 +383,7 @@ export const products: Product[] = [
     name: "Cubrelecho Cebra",
     price: 39.99,
     category: "hogar",
-    image: "https://images.unsplash.com/photo-1522771739014-7ebf19b19b0a?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop",
     rating: 4.3,
     reviews: 78,
     description:
@@ -419,7 +419,7 @@ export const products: Product[] = [
     name: "Espejo de Piso Grande",
     price: 44.99,
     category: "hogar",
-    image: "https://images.unsplash.com/photo-1616600249638-46d2b5530f7b?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1721739495545-3c4ce13a347a?w=400&h=400&fit=crop",
     rating: 4.7,
     reviews: 91,
     description:
@@ -443,7 +443,7 @@ export const products: Product[] = [
     name: "Set de Maquillaje Básico",
     price: 19.99,
     category: "belleza",
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1512207576147-99bc3066b621?w=400&h=400&fit=crop",
     rating: 4.1,
     reviews: 189,
     description:
@@ -455,7 +455,7 @@ export const products: Product[] = [
     name: "Shampoo Nutritivo 500ml",
     price: 9.99,
     category: "belleza",
-    image: "https://images.unsplash.com/photo-1585747861115-71a99088cb76?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1762827990160-9f2d35fb0fd5?w=400&h=400&fit=crop",
     rating: 4.3,
     reviews: 221,
     description:
@@ -467,7 +467,7 @@ export const products: Product[] = [
     name: "Protector Solar SPF 50",
     price: 12.99,
     category: "belleza",
-    image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1721913395444-0cd6856a864c?w=400&h=400&fit=crop",
     rating: 4.6,
     reviews: 198,
     description:
@@ -491,7 +491,7 @@ export const products: Product[] = [
     name: "Kit de Cuidado Facial",
     price: 16.99,
     category: "belleza",
-    image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1761775247546-89950362a39b?w=400&h=400&fit=crop",
     rating: 4.2,
     reviews: 67,
     description:
@@ -503,7 +503,7 @@ export const products: Product[] = [
     name: "Muñeca Bebé Interactiva",
     price: 22.99,
     category: "juguetes",
-    image: "https://images.unsplash.com/photo-1596460107916-430662021049?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1730647338786-404f7ac0c936?w=400&h=400&fit=crop",
     rating: 4.4,
     reviews: 89,
     description:
@@ -515,7 +515,7 @@ export const products: Product[] = [
     name: "Pista de Carreras Eléctrica",
     price: 34.99,
     category: "juguetes",
-    image: "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1757210202785-bf99111aab67?w=400&h=400&fit=crop",
     rating: 4.6,
     reviews: 134,
     description:
@@ -527,7 +527,7 @@ export const products: Product[] = [
     name: "Rompecabezas 1000 Piezas",
     price: 14.99,
     category: "juguetes",
-    image: "https://images.unsplash.com/photo-1586162245614-77d1214f74c0?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1707769775421-832e9bf0f5b0?w=400&h=400&fit=crop",
     rating: 4.5,
     reviews: 76,
     description:
@@ -539,7 +539,7 @@ export const products: Product[] = [
     name: "Tren de Juguete Eléctrico",
     price: 29.99,
     category: "juguetes",
-    image: "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1762015918660-062b35bc3bee?w=400&h=400&fit=crop",
     rating: 4.3,
     reviews: 55,
     description:
@@ -551,7 +551,7 @@ export const products: Product[] = [
     name: "Juego de Mesa Estrategia",
     price: 17.99,
     category: "juguetes",
-    image: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1681402720847-961bb1aab8d8?w=400&h=400&fit=crop",
     rating: 4.7,
     reviews: 198,
     description:
@@ -563,7 +563,7 @@ export const products: Product[] = [
     name: "Pelota Saltarina Saltón",
     price: 12.99,
     category: "juguetes",
-    image: "https://images.unsplash.com/photo-1571687949921-1306a8f78933?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1562077790-5fab0c2e49eb?w=400&h=400&fit=crop",
     rating: 4.0,
     reviews: 43,
     description:
@@ -575,7 +575,7 @@ export const products: Product[] = [
     name: "Libro: Cien Años de Soledad",
     price: 12.99,
     category: "libros",
-    image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1774366127010-9835ae1373a0?w=400&h=400&fit=crop",
     rating: 4.9,
     reviews: 345,
     description:
@@ -587,7 +587,7 @@ export const products: Product[] = [
     name: "Cuaderno Profesional A5",
     price: 6.99,
     category: "libros",
-    image: "https://images.unsplash.com/photo-1531346878377-a5be20888b56?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=400&fit=crop",
     rating: 4.3,
     reviews: 89,
     description:
@@ -599,7 +599,7 @@ export const products: Product[] = [
     name: "Libro: Hábitos Atómicos",
     price: 11.99,
     category: "libros",
-    image: "https://images.unsplash.com/photo-1589829085813-5e8e2f0c2e3f?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?w=400&h=400&fit=crop",
     rating: 4.8,
     reviews: 412,
     description:
@@ -635,7 +635,7 @@ export const products: Product[] = [
     name: "Agenda Diaria 2026",
     price: 9.99,
     category: "libros",
-    image: "https://images.unsplash.com/photo-1531346878377-a5be20888b56?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1772396867158-e26d9e6256b2?w=400&h=400&fit=crop",
     rating: 4.4,
     reviews: 110,
     description:
@@ -671,7 +671,7 @@ export const products: Product[] = [
     name: "Cuerda para Saltar Ajustable",
     price: 8.99,
     category: "deporte",
-    image: "https://images.unsplash.com/photo-1598716954313-faaa07b4a154?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1758875568447-aa45a5d3b351?w=400&h=400&fit=crop",
     rating: 4.2,
     reviews: 203,
     description:
@@ -683,7 +683,7 @@ export const products: Product[] = [
     name: "Colchoneta Yoga 6mm",
     price: 18.99,
     category: "deporte",
-    image: "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1767605523281-8b54b3692078?w=400&h=400&fit=crop",
     rating: 4.4,
     reviews: 134,
     description:
@@ -743,7 +743,7 @@ export const products: Product[] = [
     name: "Cinturón Cuero Formal",
     price: 22.99,
     category: "accesorios",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1752386268324-0533ffbfbc0e?w=400&h=400&fit=crop",
     rating: 4.3,
     reviews: 89,
     description:
@@ -779,7 +779,7 @@ export const products: Product[] = [
     name: "Pañuelo Seda Estampado",
     price: 11.99,
     category: "accesorios",
-    image: "https://images.unsplash.com/photo-1604603815783-2bd94c5a819e?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1511145573746-0a8f97b8c173?w=400&h=400&fit=crop",
     rating: 4.2,
     reviews: 43,
     description:
