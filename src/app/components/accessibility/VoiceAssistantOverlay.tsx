@@ -1,39 +1,37 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { Mic, X, MicOff } from "lucide-react";
 import { useApp } from "../../context/AppContext";
-import { useSpeechRecognition } from "../../hooks/useSpeechRecognition";
 import { useVoiceCommands } from "../../hooks/useVoiceCommands";
 import { useTextToSpeech } from "../../hooks/useTextToSpeech";
+import { VoiceStatus } from "../../hooks/useSpeechRecognition";
 
 interface VoiceAssistantOverlayProps {
   onClose: () => void;
+  transcript: string;
+  interimTranscript: string;
+  status: VoiceStatus;
+  isSupported: boolean;
 }
 
-export const VoiceAssistantOverlay = ({ onClose }: VoiceAssistantOverlayProps) => {
+export const VoiceAssistantOverlay = ({ onClose, transcript, interimTranscript, status, isSupported }: VoiceAssistantOverlayProps) => {
   const app = useApp();
-  const { status, transcript, interimTranscript, error, isSupported, startListening, stopListening, resetTranscript } = useSpeechRecognition();
   const { processCommand } = useVoiceCommands(app);
   const { speak } = useTextToSpeech(app.state.accessibility);
 
-  useEffect(() => {
-    if (isSupported) {
-      startListening();
-      speak("Di un comando, por ejemplo: buscar zapatillas");
+  const processRef = useCallback((text: string) => {
+    const response = processCommand(text);
+    if (response) {
+      speak(response);
+      setTimeout(onClose, 2000);
+    } else {
+      speak("No entendí el comando. Intenta de nuevo.");
+      setTimeout(onClose, 2000);
     }
-    return () => stopListening();
-  }, [isSupported]);
+  }, [processCommand, speak, onClose]);
 
   useEffect(() => {
     if (transcript && status === "processing") {
-      const response = processCommand(transcript);
-      if (response) {
-        speak(response);
-        resetTranscript();
-        setTimeout(onClose, 2000);
-      } else {
-        speak("No entendí el comando. Intenta de nuevo.");
-        resetTranscript();
-      }
+      processRef(transcript);
     }
   }, [transcript, status]);
 
@@ -52,7 +50,7 @@ export const VoiceAssistantOverlay = ({ onClose }: VoiceAssistantOverlayProps) =
     <div className="absolute inset-0 z-50 bg-overlay/70 flex items-center justify-center animate-fade-in">
       <div className="bg-card rounded-2xl p-8 flex flex-col items-center gap-6 mx-4 max-w-sm w-full animate-scale-in relative">
         <button
-          onClick={() => { stopListening(); onClose(); }}
+          onClick={onClose}
           className="absolute top-4 right-4 w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground"
           aria-label="Cerrar asistente"
         >
@@ -103,12 +101,6 @@ export const VoiceAssistantOverlay = ({ onClose }: VoiceAssistantOverlayProps) =
                 </div>
               )}
             </div>
-
-            {error && (
-              <div className="bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3 w-full">
-                <p className="text-sm text-destructive text-center">{error}</p>
-              </div>
-            )}
 
             <p className="text-xs text-muted-foreground text-center">
               Di: "Buscar zapatillas" · "Abrir carrito" · "Volver al inicio"

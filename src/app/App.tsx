@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { AppProvider, useApp } from "./context/AppContext";
+import { useSpeechRecognition } from "./hooks/useSpeechRecognition";
+import { useVoiceCommands } from "./hooks/useVoiceCommands";
+import { useTextToSpeech } from "./hooks/useTextToSpeech";
 import { FloatingMicButton } from "./components/accessibility/FloatingMicButton";
 import { VoiceAssistantOverlay } from "./components/accessibility/VoiceAssistantOverlay";
 import { TutorialOverlay } from "./components/accessibility/TutorialOverlay";
@@ -18,33 +21,86 @@ import { HistoryScreen } from "./screens/HistoryScreen";
 import { AccessibilityScreen } from "./screens/AccessibilityScreen";
 
 function AppContent() {
-  const { state } = useApp();
+  const app = useApp();
+  const { processCommand } = useVoiceCommands(app);
+  const { speak } = useTextToSpeech(app.state.accessibility);
+
+  // ─── Single shared speech recognition instance ─────────────
+  const {
+    status, transcript, interimTranscript, error,
+    isSupported, startListening, stopListening, resetTranscript,
+  } = useSpeechRecognition();
+
   const [voiceActive, setVoiceActive] = useState(false);
   const [voiceAssistantOpen, setVoiceAssistantOpen] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const voiceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wakeRef = useRef(false);
 
+  // ─── Start continuous listening after first mic press ──────
   const handleVoice = useCallback(() => {
-    setVoiceActive(true);
+    if (isSupported && status === "idle") {
+      resetTranscript();
+      startListening();
+    }
+    resetTranscript();
     setVoiceAssistantOpen(true);
+    setVoiceActive(true);
     if (voiceTimer.current) clearTimeout(voiceTimer.current);
-    voiceTimer.current = setTimeout(() => {
-      setVoiceActive(false);
-    }, 10000);
-  }, []);
+    voiceTimer.current = setTimeout(() => setVoiceActive(false), 10000);
+  }, [isSupported, status, startListening, resetTranscript]);
 
   const stopVoice = useCallback(() => {
-    setVoiceActive(false);
     setVoiceAssistantOpen(false);
+    setVoiceActive(false);
     if (voiceTimer.current) clearTimeout(voiceTimer.current);
   }, []);
 
+  // ─── Wake word "hola" detection ────────────────────────────
   useEffect(() => {
-    if (state.screen === "home" && !state.accessibility.tutorialSeen && !showTutorial) {
+    if (!transcript || status !== "processing") return;
+    if (voiceAssistantOpen) return; // already open, VAD handles it
+
+    const text = transcript.toLowerCase().trim();
+
+    if (text.startsWith("hola ") || text === "hola") {
+      const cmd = text.replace(/^hola\s*/i, "").trim();
+      resetTranscript();
+      wakeRef.current = true;
+      setVoiceAssistantOpen(true);
+      setVoiceActive(true);
+      if (voiceTimer.current) clearTimeout(voiceTimer.current);
+      voiceTimer.current = setTimeout(() => setVoiceActive(false), 10000);
+
+      if (cmd) {
+        setTimeout(() => {
+          const response = processCommand(cmd);
+          if (response) speak(response);
+          setTimeout(stopVoice, 2000);
+        }, 300);
+      } else {
+        speak("Dime qué necesitas");
+      }
+    }
+  }, [transcript, status, voiceAssistantOpen]);
+
+  // ─── Keep recognition alive in background ──────────────────
+  useEffect(() => {
+    if (!isSupported) return;
+    // Start after splash
+    if (app.state.screen !== "splash" && status === "idle") {
+      const timer = setTimeout(() => startListening(), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSupported, app.state.screen, status, startListening]);
+
+  // ─── Tutorial ──────────────────────────────────────────────
+  useEffect(() => {
+    if (app.state.screen === "home" && !app.state.accessibility.tutorialSeen && !showTutorial) {
       const timer = setTimeout(() => setShowTutorial(true), 800);
       return () => clearTimeout(timer);
     }
-  }, [state.screen, state.accessibility.tutorialSeen]);
+  }, [app.state.screen, app.state.accessibility.tutorialSeen, showTutorial]);
 
   useEffect(() => {
     return () => {
@@ -53,7 +109,7 @@ function AppContent() {
   }, []);
 
   const switchScreen = () => {
-    switch (state.screen) {
+    switch (app.state.screen) {
       case "splash": return <SplashScreen />;
       case "home": return <HomeScreen voiceActive={voiceActive} onVoice={handleVoice} />;
       case "categories": return <CategoriesScreen voiceActive={voiceActive} onVoice={handleVoice} />;
@@ -69,8 +125,8 @@ function AppContent() {
     }
   };
 
-  const a11y = state.accessibility;
-  const showIndicator = state.screen !== "splash" && (
+  const a11y = app.state.accessibility;
+  const showIndicator = app.state.screen !== "splash" && (
     a11y.voiceCommands || a11y.ttsEnabled || a11y.oneHandMode ||
     a11y.buttonSize === "large" || a11y.highContrast || a11y.darkMode
   );
@@ -88,7 +144,13 @@ function AppContent() {
         {switchScreen()}
 
         {voiceAssistantOpen && (
-          <VoiceAssistantOverlay onClose={stopVoice} />
+          <VoiceAssistantOverlay
+            onClose={stopVoice}
+            transcript={transcript}
+            interimTranscript={interimTranscript}
+            status={status}
+            isSupported={isSupported}
+          />
         )}
 
         {showTutorial && (
@@ -96,7 +158,7 @@ function AppContent() {
         )}
       </div>
 
-      {a11y.voiceCommands && state.screen !== "splash" && (
+      {a11y.voiceCommands && app.state.screen !== "splash" && (
         <FloatingMicButton onClick={handleVoice} active={voiceActive} />
       )}
     </>
