@@ -46,6 +46,19 @@ export function useVoiceCommands(actions: AppActions) {
         return `Buscando "${queryRaw}"`;
       }
 
+      // ─── Enter product ("entrar zapatillas running", "elige audifonos") ──
+      if (cmd.startsWith("entrar ") || cmd.startsWith("elige ") || cmd.startsWith("elegir ") || cmd.startsWith("escoger ")) {
+        const trigger = cmd.startsWith("entrar ") ? "entrar " : cmd.startsWith("elige ") ? "elige " : cmd.startsWith("elegir ") ? "elegir " : "escoger ";
+        const rawName = transcript.slice(trigger.length).replace(/[^a-záéíóúüñ0-9\s]+$/i, "").trim();
+        const needle = normalize(rawName);
+        for (const p of products) {
+          if (normalize(p.name).includes(needle)) {
+            actions.selectProduct(p.id);
+            return `Abriendo ${p.name}`;
+          }
+        }
+      }
+
       // ─── Categories ("abrir tecnología", "mostrar ropa", etc) ──────────
       const categoryTrigger = words.find(w =>
         ["mostrar", "ver", "ir", "abrir", "categoria", "categoría"].includes(w)
