@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { AppProvider, useApp } from "./context/AppContext";
 import { FloatingMicButton } from "./components/accessibility/FloatingMicButton";
 import { VoiceAssistantOverlay } from "./components/accessibility/VoiceAssistantOverlay";
+import { BackgroundVoiceListener } from "./components/accessibility/BackgroundVoiceListener";
 import { TutorialOverlay } from "./components/accessibility/TutorialOverlay";
 import { AccessibilityIndicator } from "./components/accessibility/AccessibilityIndicator";
 
@@ -90,6 +91,8 @@ function AppContent() {
         {voiceAssistantOpen && (
           <VoiceAssistantOverlay onClose={stopVoice} />
         )}
+
+        <BackgroundVoiceListener />
 
         {showTutorial && (
           <TutorialOverlay onClose={() => setShowTutorial(false)} />
