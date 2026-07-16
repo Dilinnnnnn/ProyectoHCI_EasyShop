@@ -137,9 +137,9 @@ function appReducer(state: AppState, action: Action): AppState {
     case "SELECT_PRODUCT":
       return { ...state, previousScreen: state.screen, selectedProductId: action.productId, screen: "product-detail" };
     case "SELECT_CATEGORY":
-      return { ...state, previousScreen: state.screen, selectedCategoryId: action.categoryId, screen: "product-list" };
+      return { ...state, previousScreen: state.screen, selectedCategoryId: action.categoryId, searchQuery: "", screen: "product-list" };
     case "SET_SEARCH":
-      return { ...state, searchQuery: action.query };
+      return { ...state, previousScreen: state.screen, searchQuery: action.query, selectedCategoryId: null, screen: "product-list" };
     case "ADD_TO_CART": {
       const existing = state.cartItems.find((i) => i.id === action.product.id);
       if (existing) {

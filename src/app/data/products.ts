@@ -791,14 +791,22 @@ export const products: Product[] = [
 export const getProductsByCategory = (categoryId: string): Product[] =>
   products.filter((p) => p.category === categoryId);
 
+const accentFold: Record<string, string> = {
+  á: "a", é: "e", í: "i", ó: "o", ú: "u", ü: "u", ñ: "n",
+};
+
+function norm(s: string) {
+  return s.toLowerCase().replace(/[áéíóúüñ]/g, (c) => accentFold[c] || c);
+}
+
 export const searchProducts = (query: string): Product[] => {
-  const q = query.toLowerCase().trim();
+  const q = norm(query).trim();
   if (!q) return [];
   return products.filter(
     (p) =>
-      p.name.toLowerCase().includes(q) ||
-      p.description.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q)
+      norm(p.name).includes(q) ||
+      norm(p.description).includes(q) ||
+      norm(p.category).includes(q)
   );
 };
 
