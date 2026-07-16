@@ -47,7 +47,7 @@ export const FloatingMicButton = ({ onClick, active }: FloatingMicButtonProps) =
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={() => { draggingRef.current = false; dragRef.current.moved = false; }}
-      className="z-50 flex items-center gap-2 px-5 py-4 rounded-2xl shadow-xl ripple-btn touch-none select-none
+      className="z-[60] flex items-center gap-2 px-5 py-4 rounded-2xl shadow-xl ripple-btn touch-none select-none
         bg-voice text-voice-foreground hover:bg-voice/90 active:scale-95 transition-all max-w-[90vw]"
       style={{
         position: "absolute",

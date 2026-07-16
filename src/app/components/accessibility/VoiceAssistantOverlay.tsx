@@ -21,7 +21,6 @@ export const VoiceAssistantOverlay = ({ onClose, transcript, interimTranscript, 
 
   const processRef = useCallback((text: string) => {
     const response = processCommand(text);
-    setWaiting(true);
     if (response) {
       speak(response);
       setTimeout(() => { setWaiting(false); onClose(); }, 2000);
@@ -37,6 +36,21 @@ export const VoiceAssistantOverlay = ({ onClose, transcript, interimTranscript, 
       processRef(transcript);
     }
   }, [transcript, status]);
+
+  useEffect(() => {
+    if (status === "error") {
+      speak("Error de reconocimiento. Intenta de nuevo.");
+      setTimeout(() => onClose(), 2000);
+    }
+  }, [status]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      speak("No se detectó voz. Cerrando asistente.");
+      onClose();
+    }, 12000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const displayText = waiting ? "Escuchando..." : (interimTranscript || transcript || "Escuchando...");
 
